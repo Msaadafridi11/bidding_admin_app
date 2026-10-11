@@ -41,15 +41,19 @@ class _SupabbasState extends State<Supabbas> {
           .from('images')
           .upload(path, _imageFile!);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image uploaded successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Image uploaded successfully')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Upload failed: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Upload failed: $e')),
+        );
+      }
     } finally {
-      setState(() => isBusy = false);
+      if (mounted) setState(() => isBusy = false);
     }
   }
 

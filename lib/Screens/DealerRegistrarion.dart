@@ -1,5 +1,4 @@
 import 'package:bidding_admin/Models/user_model.dart';
-import 'package:bidding_admin/Screens/DealerRegistrationForm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +12,6 @@ class Dealerregistrarion extends StatefulWidget {
 }
 
 class _DealerregistrarionState extends State<Dealerregistrarion> {
-
   bool isApproving = false;
   bool isRejecting = false;
 
@@ -44,6 +42,15 @@ class _DealerregistrarionState extends State<Dealerregistrarion> {
 
   // ---------------- APPROVE ----------------
   Future<void> _approveDealer() async {
+    if (dealerUid == null || dealerUid!.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error: Dealer UID is missing.")),
+        );
+      }
+      return;
+    }
+
     setState(() {
       isApproving = true;
       isRejecting = false;
@@ -59,13 +66,17 @@ class _DealerregistrarionState extends State<Dealerregistrarion> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Dealer Approved Successfully!")),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => Dealerregistrationform()),
-        );
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context, true);
+        }
       }
     } catch (e) {
       debugPrint("Approve error: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to approve dealer: $e")),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() => isApproving = false);
@@ -75,6 +86,15 @@ class _DealerregistrarionState extends State<Dealerregistrarion> {
 
   // ---------------- REJECT ----------------
   Future<void> _rejectDealer() async {
+    if (dealerUid == null || dealerUid!.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error: Dealer UID is missing.")),
+        );
+      }
+      return;
+    }
+
     setState(() {
       isRejecting = true;
       isApproving = false;
@@ -90,13 +110,17 @@ class _DealerregistrarionState extends State<Dealerregistrarion> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Dealer Request Rejected")),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => Dealerregistrationform()),
-        );
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context, true);
+        }
       }
     } catch (e) {
       debugPrint("Reject error: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to reject dealer: $e")),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() => isRejecting = false);
@@ -106,7 +130,6 @@ class _DealerregistrarionState extends State<Dealerregistrarion> {
 
   @override
   Widget build(BuildContext context) {
-
     if (widget.dealerData == null) {
       return const Scaffold(
         body: Center(child: Text("No Dealer Data Found")),
@@ -207,9 +230,9 @@ class _DealerregistrarionState extends State<Dealerregistrarion> {
         isLoading
             ? const CircularProgressIndicator()
             : IconButton(
-          icon: Icon(icon, color: color, size: 70),
-          onPressed: onTap,
-        ),
+                icon: Icon(icon, color: color, size: 70),
+                onPressed: onTap,
+              ),
         const SizedBox(height: 6),
         Text(
           label,

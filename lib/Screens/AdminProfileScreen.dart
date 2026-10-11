@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// Ensure this path matches your project structure
 import 'package:bidding_admin/Screens/DealerRegistrationForm.dart';
 
 class AdminProfileScreen extends StatefulWidget {
@@ -16,7 +15,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       backgroundColor: Colors.grey[300],
       body: CustomScrollView(
         slivers: [
-          //  Beautiful Gradient Header
+          // Beautiful Gradient Header
           SliverAppBar(
             expandedHeight: 200.0,
             floating: false,
@@ -75,14 +74,16 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Dealerregistrationform()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const Dealerregistrationform()),
                       );
                     },
                   ),
 
                   const SizedBox(height: 15),
 
-                  // Example of a second card for symmetry
+                  // Second card for View All Dealers
                   _buildMenuCard(
                     context,
                     title: "View All Dealers",
@@ -90,7 +91,12 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                     icon: Icons.group_work_rounded,
                     color: Colors.orange,
                     onTap: () {
-                      // Add navigation here later
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const Dealerregistrationform()),
+                      );
                     },
                   ),
                 ],
@@ -104,13 +110,13 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
 
   // Reusable Widget for the Menu Items
   Widget _buildMenuCard(
-      BuildContext context, {
-        required String title,
-        required String subtitle,
-        required IconData icon,
-        required Color color,
-        required VoidCallback onTap,
-      }) {
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(15),
@@ -121,7 +127,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -132,7 +138,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 28),

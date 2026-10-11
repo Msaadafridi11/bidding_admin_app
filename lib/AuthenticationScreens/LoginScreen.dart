@@ -306,7 +306,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Aapke original projects ke imports
-import 'package:bidding_admin/Screens/BottemNevigationScreen.dart';
 import 'package:bidding_admin/WidgetsScreen/CustomTextFormField.dart';
 import 'package:bidding_admin/models/user_model.dart';
 
@@ -346,6 +345,13 @@ class _LoginscreenState extends State<Loginscreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Future<void> loginUser() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -366,30 +372,35 @@ class _LoginscreenState extends State<Loginscreen> {
           .doc(uid)
           .get();
 
-      if (doc.exists) {
+      if (doc.exists && doc.data() != null) {
         UserModel userModel = UserModel.fromJson(doc.data()!);
 
         if (userModel.isRole == true) {
-          //  Approved: Go to App
-          if (mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const Bottemnevigationscreen()),
-            );
+          // Approved: AuthWrapper will automatically transition to Bottemnevigationscreen
+          if (mounted && Navigator.canPop(context)) {
+            Navigator.pop(context);
           }
         } else {
-          //  PENDING: Sign out aur Pop-up ka WAIT karein
+          // PENDING: Sign out and show dialog
           await FirebaseAuth.instance.signOut();
-          await _showErrorDialog("Aapka account admin ki approval ke liye pending hai. Jab tak approval nahi milti aap login nahi kar sakte.");
+          if (mounted) {
+            await _showErrorDialog("Aapka account admin ki approval ke liye pending hai. Jab tak approval nahi milti aap login nahi kar sakte.");
+          }
         }
       } else {
         await FirebaseAuth.instance.signOut();
-        await _showErrorDialog("Aapka record database mein nahi mila.");
+        if (mounted) {
+          await _showErrorDialog("Aapka record database mein nahi mila.");
+        }
       }
     } on FirebaseAuthException catch (e) {
-      await _showErrorDialog(e.message ?? "Login Failed");
+      if (mounted) {
+        await _showErrorDialog(e.message ?? "Login Failed");
+      }
     } catch (e) {
-      await _showErrorDialog("Error: $e");
+      if (mounted) {
+        await _showErrorDialog("Error: $e");
+      }
     } finally {
       if (mounted) setState(() => isBusy = false);
     }

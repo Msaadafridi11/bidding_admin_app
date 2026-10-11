@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:bidding_admin/Models/item_model.dart';
-import 'package:bidding_admin/Screens/AdminCarListsScreen.dart';
 import 'package:bidding_admin/Screens/BottemNevigationScreen.dart';
 import 'package:bidding_admin/WidgetsScreen/CustomTextFormField.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Adminadddata extends StatefulWidget {
-  Adminadddata({
+  const Adminadddata({
     super.key,
     this.item,
   });
@@ -132,21 +130,31 @@ class _AdminadddataState extends State<Adminadddata> {
           .set(data.toJson());
 
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data added successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Data added successfully')),
+        );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => Bottemnevigationscreen(),
-        ),
-      );
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const Bottemnevigationscreen(),
+            ),
+          );
+        }
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     } finally {
-      setState(() => isSaving = false);
+      if (mounted) {
+        setState(() => isSaving = false);
+      }
     }
   }
 
@@ -217,21 +225,31 @@ class _AdminadddataState extends State<Adminadddata> {
       
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Car updated successfully')),
-    );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Car updated successfully')),
+        );
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => Bottemnevigationscreen()),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Error: $e')));
-  } finally {
-    _images.clear();
-    setState(() => isUpdating = false);
-  }
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const Bottemnevigationscreen()),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+    } finally {
+      _images.clear();
+      if (mounted) {
+        setState(() => isUpdating = false);
+      }
+    }
 }
 
 String _getSupabasePathFromUrl(String url) {
@@ -264,21 +282,31 @@ String _getSupabasePathFromUrl(String url) {
         .doc(widget.item!.itemId)
         .delete();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Car deleted successfully')),
-    );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Car deleted successfully')),
+        );
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => Bottemnevigationscreen()),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Delete failed: $e')),
-    );
-  } finally {
-    setState(() => isDeleting = false);
-  }
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const Bottemnevigationscreen()),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Delete failed: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => isDeleting = false);
+      }
+    }
 }
 
 
@@ -1441,6 +1469,7 @@ String _getSupabasePathFromUrl(String url) {
                               );
 
                               if (pickedDate == null) return;
+                              if (!mounted) return;
 
                               // Time picker
                               TimeOfDay? pickedTime = await showTimePicker(
@@ -1479,9 +1508,23 @@ String _getSupabasePathFromUrl(String url) {
                             : () async {
                                 if (!_formKey.currentState!.validate()) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                           content: Text(
                                               'Please fill all required fields')));
+                                  return;
+                                }
+                                if (_selectedBidEndTime == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Please select bid end time')));
+                                  return;
+                                }
+                                if (_images.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Please select at least one image')));
                                   return;
                                 }
                                 // we call save function and also diagol
@@ -1501,7 +1544,7 @@ String _getSupabasePathFromUrl(String url) {
                             boxShadow: [
                               BoxShadow(
                                 color: const Color.fromARGB(255, 69, 16, 104)
-                                    .withOpacity(0.4),
+                                    .withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                                 spreadRadius: 3,
@@ -1546,10 +1589,12 @@ String _getSupabasePathFromUrl(String url) {
                                           'Do you want to delete this car ?',
                                       onConfirm: _deleteCar);
                                 } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(e.toString())));
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(e.toString())));
+                                  }
                                 } finally {
-                                  setState(() => isDeleting = false);
+                                  if (mounted) setState(() => isDeleting = false);
                                 }
                               },
                         child: Container(
@@ -1561,7 +1606,7 @@ String _getSupabasePathFromUrl(String url) {
                             boxShadow: [
                               BoxShadow(
                                 color: const Color.fromARGB(255, 69, 16, 104)
-                                    .withOpacity(0.4),
+                                    .withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                                 spreadRadius: 3,

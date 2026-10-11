@@ -27,7 +27,7 @@ class Custemtextformfield extends StatelessWidget {
   final Widget? prefixIcon;
   final String? Function(String?)? validator;
   final int? maxLines;
-  void Function(String)? onchanged;
+  final void Function(String)? onchanged;
   final void Function()? onTap;
   final bool readOnly;
   final EdgeInsetsGeometry? contentPadding;
