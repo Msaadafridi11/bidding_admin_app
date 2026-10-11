@@ -1,8 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'user_model.g.dart';
-
-@JsonSerializable()
 class UserModel {
   String? uid;
   String? name;
@@ -11,7 +6,6 @@ class UserModel {
   int? phoneNum;
   String? compnyName;
   bool? isRole;
-
 
   UserModel({
     this.uid,
@@ -23,34 +17,59 @@ class UserModel {
     this.isRole,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    int? parsedPhone;
-    if (json['phoneNum'] != null) {
-      if (json['phoneNum'] is int) {
-        parsedPhone = json['phoneNum'] as int;
-      } else {
-        parsedPhone = int.tryParse(json['phoneNum'].toString());
-      }
-    }
+  static int? _parseInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
 
+  factory UserModel.fromMap(Map<String, dynamic> map, {String? docId}) {
     return UserModel(
-      uid: json['uid']?.toString(),
-      name: json['name']?.toString(),
-      email: json['email']?.toString(),
-      isVerified: json['isVerified'] as bool?,
-      phoneNum: parsedPhone,
-      compnyName: (json['compnyName'] ?? json['companyName'])?.toString(),
-      isRole: json['isRole'] as bool?,
+      uid: (map['uid'] as String?) ?? docId,
+      name: map['name']?.toString(),
+      email: map['email']?.toString(),
+      isVerified: map['isVerified'] as bool?,
+      phoneNum: _parseInt(map['phoneNum']),
+      compnyName: (map['compnyName'] ?? map['companyName'])?.toString(),
+      isRole: map['isRole'] as bool?,
     );
   }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-    'uid': uid,
-    'name': name,
-    'email': email,
-    'isVerified': isVerified,
-    'phoneNum': phoneNum,
-    'compnyName': compnyName,
-    'isRole': isRole,
-  };
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel.fromMap(json);
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      if (uid != null) 'uid': uid,
+      if (name != null) 'name': name,
+      if (email != null) 'email': email,
+      if (isVerified != null) 'isVerified': isVerified,
+      if (phoneNum != null) 'phoneNum': phoneNum,
+      if (compnyName != null) 'compnyName': compnyName,
+      if (isRole != null) 'isRole': isRole,
+    };
+  }
+
+  Map<String, dynamic> toJson() => toMap();
+
+  UserModel copyWith({
+    String? uid,
+    String? name,
+    String? email,
+    bool? isVerified,
+    int? phoneNum,
+    String? compnyName,
+    bool? isRole,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      isVerified: isVerified ?? this.isVerified,
+      phoneNum: phoneNum ?? this.phoneNum,
+      compnyName: compnyName ?? this.compnyName,
+      isRole: isRole ?? this.isRole,
+    );
+  }
 }

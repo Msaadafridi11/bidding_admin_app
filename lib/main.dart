@@ -1,8 +1,14 @@
-import 'package:bidding_admin/Screens/BottemNevigationScreen.dart';
-import 'package:bidding_admin/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/theme/app_theme.dart';
+import 'firebase_options.dart';
+import 'viewmodels/admin_profile_viewmodel.dart';
+import 'viewmodels/auth_viewmodel.dart';
+import 'viewmodels/car_list_viewmodel.dart';
+import 'viewmodels/dealer_viewmodel.dart';
+import 'views/dashboard/bottom_navigation_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,14 +38,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Bidding Admin',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => CarListViewModel()),
+        ChangeNotifierProvider(create: (_) => DealerViewModel()),
+        ChangeNotifierProvider(create: (_) => AdminProfileViewModel()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Bidding Admin',
+        theme: AppTheme.lightTheme,
+        home: const BottomNavigationView(),
       ),
-      home: const Bottemnevigationscreen(),
     );
   }
 }

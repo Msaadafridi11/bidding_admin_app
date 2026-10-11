@@ -1,27 +1,25 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class Custemtextformfield extends StatelessWidget {
-  Custemtextformfield(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      this.prefixIcon,
-      this.suffixIcon,
-      this.validator,
-      required this.maxLines,
-      this.onchanged,
-      this.onTap,
-      required this.readOnly,
-      required this.filled,
-      required this.fillColor,
-      this.contentPadding,
-      this.hintStyle,
-      required this.label,
-      
-      
-      });
+  const Custemtextformfield({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.validator,
+    required this.maxLines,
+    this.onchanged,
+    this.onTap,
+    required this.readOnly,
+    required this.filled,
+    required this.fillColor,
+    this.contentPadding,
+    this.hintStyle,
+    required this.label,
+  });
 
-  //we takes variables for textformfield
   final TextEditingController? controller;
   final String hintText;
   final Widget? prefixIcon;
@@ -36,7 +34,6 @@ class Custemtextformfield extends StatelessWidget {
   final TextStyle? hintStyle;
   final Widget? label;
   final Widget? suffixIcon;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +41,18 @@ class Custemtextformfield extends StatelessWidget {
       onChanged: onchanged,
       controller: controller,
       onTap: onTap,
-      readOnly: readOnly,     
+      readOnly: readOnly,
       decoration: InputDecoration(
-          contentPadding: contentPadding,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-          filled: filled,
-          hintText: hintText,
-          hintStyle: hintStyle,
-          fillColor: fillColor, 
-          label: label, 
-          
-
-          ),
+        contentPadding: contentPadding,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        filled: filled,
+        hintText: hintText,
+        hintStyle: hintStyle,
+        fillColor: fillColor,
+        label: label,
+      ),
       validator: validator,
       maxLines: maxLines,
     );

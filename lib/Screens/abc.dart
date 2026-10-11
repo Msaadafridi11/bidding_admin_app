@@ -13,10 +13,10 @@ class _AbcState extends State<Abc> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Abc Screen'),
+        title: const Text('Abc Screen'),
       ),
       body: Center(
-        child:Column(
+        child: Column(
           children: [
             Expanded(
               child: ElevatedButton(
@@ -28,18 +28,16 @@ class _AbcState extends State<Abc> {
                       'status': 'ok',
                       'time': Timestamp.now(),
                     });
-                    print('✅ FIRESTORE CONNECTED');
+                    debugPrint('✅ FIRESTORE CONNECTED');
                   } catch (e) {
-                    print('❌ FIRESTORE ERROR: $e');
+                    debugPrint('❌ FIRESTORE ERROR: $e');
                   }
                 },
                 child: const Text('Test Firestore'),
               ),
-            )
-
-
+            ),
           ],
-        )
+        ),
       ),
     );
   }

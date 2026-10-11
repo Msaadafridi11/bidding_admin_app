@@ -1,7 +1,15 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class Customlisttile extends StatelessWidget {
-  const Customlisttile({super.key, this.leading, required this.title, required this.subtitle, this.trailing, });
+  const Customlisttile({
+    super.key,
+    this.leading,
+    required this.title,
+    required this.subtitle,
+    this.trailing,
+  });
+
   final Widget? leading;
   final Widget? title;
   final Widget? subtitle;
@@ -13,8 +21,7 @@ class Customlisttile extends StatelessWidget {
       leading: leading,
       title: title,
       subtitle: subtitle,
-      trailing: trailing,    
-      
+      trailing: trailing,
     );
   }
 }
